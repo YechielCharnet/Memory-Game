@@ -37,20 +37,23 @@ const cardsArray = [
   "90",
   "100",
 ];
+// settings:
+const grid = document.getElementById("grid");
+let pairsOfCards = 8;
+let cards = [];
+for (let i = 0; i < pairsOfCards; i++) {
+  cards.push(cardsArray[i]);
+  cards.push(cardsArray[i]);
+}
 let card1 = null;
 let card2 = null;
 let availableOpenCards = 0;
+let numOfGuesses;
 
 function initGame() {
-  const grid = document.getElementById("grid");
-  let numOfCards = 16;
-  let cards = [];
-  for (let i = 0; i < numOfCards / 2; i++) {
-    cards.push(cardsArray[i]);
-    cards.push(cardsArray[i]);
-  }
+  numOfGuesses = 0;
   cards = shuffle(cards);
-  for (let i = 0; i < numOfCards; i++) {
+  for (let i = 0; i < pairsOfCards * 2; i++) {
     const div = document.createElement("div");
     div.classList.add("card");
     div.textContent = cards[i];
@@ -67,10 +70,16 @@ function flippedCard() {
   if (!card1) card1 = this;
   else {
     card2 = this;
+    numOfGuesses++;
     if (card1.textContent === card2.textContent) {
       card1 = null;
       card2 = null;
       availableOpenCards = 0;
+      if (document.querySelectorAll(".flipped").length >= pairsOfCards * 2) {
+        setTimeout(() => {
+          alert(`Congratulations! you're done with ${numOfGuesses} guesses`);
+        }, 500);
+      }
     } else {
       setTimeout(() => {
         resetCards();
