@@ -1,33 +1,31 @@
 "use strict";
 
-let name = null;
-let email = null;
-let password = null;
-let usersArray = [];
-
-function saveUser() {
-  name = document.getElementById("username").value;
-  email = document.getElementById("email").value;
-  password = document.getElementById("password").value;
-  let tempUsersArray = localStorage.getItem("usersArray");
+function saveUser(event) {
+  event.preventDefault();
+  const name = document.getElementById("username").value;
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+  let user = localStorage.getItem(email);
 
   if (name && email && password) {
-    if (tempUsersArray) {
-      usersArray = JSON.parse(tempUsersArray);
-      for (let i = 0; i < usersArray.length; i++) {
-        if (email === usersArray[i]["email"]) {
-          alert("AAAAAAA");
-          break;
-        }
+    if (user) {
+      user = JSON.parse(user);
+      if (user.password != password) {
+        document.getElementById("errorMessage").textContent =
+          "invalid password";
+        return;
       }
+    } else {
+      localStorage.setItem(
+        email,
+        JSON.stringify({
+          name: name,
+          email: email,
+          password: password,
+        })
+      );
     }
-    usersArray.push({
-      name: name,
-      email: email,
-      password: password,
-    });
-    localStorage.setItem("usersArray", JSON.stringify(usersArray));
+    // window.location.replace("./ ");
   }
 }
-console.log(usersArray[0]);
 document.querySelector("button").addEventListener("click", saveUser);
